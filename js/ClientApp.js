@@ -1,19 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import MyTitle from './MyTitle';
+import { render } from 'react-dom';
+import { BrowserRouter, Match } from 'react-router';
+import Landing from './landing';
+import Search from './search';
+import '../public/normalize.css';
+import '../public/style.css';
 
-
-
-var MyFirstComponent = React.createClass({
-    render: function () {
+const App = React.createClass({
+    render() {
         return (
-            <div>
-                <MyTitle title='props are cool!' color='rebeccapurple' />
-                <MyTitle title='props are cool!!' color='mediumaquamarine' />
-                <MyTitle title='props are cool!!!' color='grey' />
-            </div>
+            <BrowserRouter>
+                <div className="app">
+                    <Match exactly pattern='/' component={Landing} />
+                    <Match exactly pattern='/search' component={Search} />
+                </div>
+            </BrowserRouter>
         )
     }
-});
+})
 
-ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
+render(<App />, document.getElementById('app'));
