@@ -1,35 +1,25 @@
 import React, { Component, PropTypes } from 'react';
-import preload from '../public/data.json';
+import { connect } from 'react-redux';
 import ShowCard from './ShowCard';
-
+import Header from './Header';
+const { arrayOf, shape, string } = PropTypes;
 class Search extends Component {
     constructor() {
         super();
-        this.state = {
-            searchTerm: ""
-        }
-        this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
-    }
-    handleSearchTermChange(event) {
-        this.setState({ searchTerm: event.target.value })
     }
     render() {
         return (
             <div className="search">
-                <header>
-                    <h1>svideo</h1>
-                    <input onChange={this.handleSearchTermChange} value={this.state.searchTerm} type='text' placeholder='Search' />
-                </header>
+                <Header showSearch />
                 <div>
                     {
-                        preload.shows
+                        this.props.shows
                             .filter((show) => {
                                 return `${show.title} ${show.description}`.
                                     toUpperCase().
-                                    indexOf(this.state.searchTerm.toUpperCase()) >= 0
+                                    indexOf(this.props.searchTerm.toUpperCase()) >= 0
                             })
                             .map((show) => {
-                                console.log(show)
                                 return (
                                     <ShowCard key={show.imdbID} {...show} />
                                 )
@@ -41,4 +31,17 @@ class Search extends Component {
     }
 }
 
-export default Search;
+Search.propTypes = {
+    shows: arrayOf(shape({
+        title: string,
+        description: string
+    })),
+    searchTerm: string
+}
+
+const mapStateToProps = (state) => {
+    return {
+        searchTerm: state.searchTerm
+    }
+}
+export default connect(mapStateToProps)(Search);
